@@ -1,0 +1,27 @@
+@ApiClinica_HostAddress = http://localhost:5070
+
+# Listar pacientes
+GET {{ApiClinica_HostAddress}}/api/pacientes
+Accept: application/json
+
+###
+
+# Buscar paciente por id
+GET {{ApiClinica_HostAddress}}/api/pacientes/1
+Accept: application/json
+
+###
+
+# Criar paciente
+POST {{ApiClinica_HostAddress}}/api/pacientes
+Content-Type: application/json
+
+{
+	"nome": "Maria Silva",
+	"email": "maria@email.com",
+	"telefone": "11999999999",
+	"dataNasc": "1998-05-10",
+	"cpf": "12345678900"
+}
+
+###
