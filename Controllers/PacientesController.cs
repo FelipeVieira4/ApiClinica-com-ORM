@@ -4,8 +4,10 @@ using ApiClinica.Data;
 using Microsoft.EntityFrameworkCore;
 using ApiClinica.DTOs;
 using ApiClinica.Mappers;
+using Microsoft.Data.Sqlite;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Data.Common;
 using System.Text.RegularExpressions;
 
 namespace ApiClinica.Controllers;
@@ -51,6 +53,8 @@ public class PacientesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreatePacient([FromBody] PacienteCreateDTO dto)
     {
+        var cpfNormalizado = NormalizarCpf(dto.Cpf);
+
         if (!IsEmailValido(dto.Email))
         {
             return BadRequest(new { mensagem = "Email com formato inválido." });
@@ -61,7 +65,7 @@ public class PacientesController : ControllerBase
             return BadRequest(new { mensagem = "Telefone com formato inválido." });
         }
 
-        if (!IsCpfValido(dto.Cpf))
+        if (!IsCpfValido(cpfNormalizado))
         {
             return BadRequest(new { mensagem = "CPF inválido." });
         }
@@ -71,7 +75,12 @@ public class PacientesController : ControllerBase
             return BadRequest(new { mensagem = "Data de nascimento não pode ser futura." });
         }
 
-        var cpfJaExiste = await _context.Pacientes.AnyAsync(p => p.Cpf == dto.Cpf);
+        var cpfsExistentes = await _context.Pacientes
+            .AsNoTracking()
+            .Select(p => p.Cpf)
+            .ToListAsync();
+
+        var cpfJaExiste = cpfsExistentes.Any(cpf => NormalizarCpf(cpf) == cpfNormalizado);
 
         if (cpfJaExiste)
         {
@@ -79,6 +88,7 @@ public class PacientesController : ControllerBase
         }
 
         var paciente = PacienteMapper.ToModel(dto);
+        paciente.Cpf = cpfNormalizado;
 
         _context.Pacientes.Add(paciente);
         await _context.SaveChangesAsync();
@@ -97,7 +107,7 @@ public class PacientesController : ControllerBase
         if (paciente == null)
             return NotFound();
 
-        if (!string.IsNullOrWhiteSpace(dto.Cpf))
+        if (dto.Cpf is not null)
         {
             return BadRequest(new { mensagem = "CPF não pode ser alterado no PATCH." });
         }
@@ -175,7 +185,7 @@ public class PacientesController : ControllerBase
 
     private static bool IsCpfValido(string cpf)
     {
-        var cpfNumeros = new string(cpf.Where(char.IsDigit).ToArray());
+        var cpfNumeros = NormalizarCpf(cpf);
 
         if (cpfNumeros.Length != 11)
             return false;
@@ -207,15 +217,26 @@ public class PacientesController : ControllerBase
         return cpfNumeros[10] - '0' == segundoDigitoCalculado;
     }
 
+    private static string NormalizarCpf(string cpf)
+    {
+        return new string(cpf.Where(char.IsDigit).ToArray());
+    }
+
     private async Task<bool> PacientePossuiConsultaFutura(int pacienteId)
     {
+        var connection = _context.Database.GetDbConnection();
+        var abriuConexao = connection.State != ConnectionState.Open;
+
+        if (abriuConexao)
+        {
+            await connection.OpenAsync();
+        }
+
         try
         {
-            var connection = _context.Database.GetDbConnection();
-
-            if (connection.State != ConnectionState.Open)
+            if (!await TabelaConsultasExiste(connection))
             {
-                await connection.OpenAsync();
+                return false;
             }
 
             using var command = connection.CreateCommand();
@@ -236,9 +257,27 @@ public class PacientesController : ControllerBase
 
             return quantidade > 0;
         }
-        catch
+        catch (SqliteException ex) when (ex.SqliteErrorCode == 1 && ex.Message.Contains("no such table", StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
+        finally
+        {
+            if (abriuConexao && connection.State == ConnectionState.Open)
+            {
+                await connection.CloseAsync();
+            }
+        }
+    }
+
+    private static async Task<bool> TabelaConsultasExiste(DbConnection connection)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT COUNT(1) FROM sqlite_master WHERE type = 'table' AND name = 'Consultas'";
+
+        var resultado = await command.ExecuteScalarAsync();
+        var quantidade = Convert.ToInt32(resultado);
+
+        return quantidade > 0;
     }
 }
