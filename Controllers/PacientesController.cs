@@ -13,9 +13,9 @@ public class PacientesController : ControllerBase
 {
     private readonly AppDbContext _context;
 
-    public PacientesController(AppDbContext context)
+    public PacientesController()
     {
-        _context = context;
+        _context = new AppDbContext();
     }
 
     // GET: api/pacientes
