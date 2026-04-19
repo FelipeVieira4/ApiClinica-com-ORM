@@ -1,2 +1,4 @@
 bin/
 obj/
+clinica.db-wal
+clinica.db-shm

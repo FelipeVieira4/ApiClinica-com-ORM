@@ -6,6 +6,30 @@ Accept: application/json
 
 ###
 
+# Listar clientes
+GET {{ApiClinica_HostAddress}}/api/clientes
+Accept: application/json
+
+###
+
+# Buscar cliente por id
+GET {{ApiClinica_HostAddress}}/api/clientes/1
+Accept: application/json
+
+###
+
+# Criar cliente
+POST {{ApiClinica_HostAddress}}/api/clientes
+Content-Type: application/json
+
+{
+	"nome": "Ana Souza",
+	"email": "ana@email.com",
+	"telefone": "11988887777"
+}
+
+###
+
 # Buscar paciente por id
 GET {{ApiClinica_HostAddress}}/api/pacientes/1
 Accept: application/json
@@ -23,5 +47,21 @@ Content-Type: application/json
 	"dataNasc": "1998-05-10",
 	"cpf": "12345678900"
 }
+
+###
+
+# Atualizar parcialmente paciente
+PATCH {{ApiClinica_HostAddress}}/api/pacientes/1
+Content-Type: application/json
+
+{
+	"nome": "Maria Silva Atualizada",
+	"telefone": "11988887777"
+}
+
+###
+
+# Remover paciente
+DELETE {{ApiClinica_HostAddress}}/api/pacientes/1
 
 ###
