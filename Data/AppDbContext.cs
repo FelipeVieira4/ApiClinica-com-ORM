@@ -24,4 +24,5 @@ public class AppDbContext : DbContext
 
     public DbSet<Paciente> Pacientes { get; set; }
     public DbSet<Cliente> Clientes { get; set; }
+    public DbSet<Medico> Medicos { get; set; }
 }
