@@ -168,15 +168,15 @@ public class MedicosController : ControllerBase
             }
 
             using var command = connection.CreateCommand();
-            command.CommandText = "SELECT COUNT(1) FROM Consultas WHERE MedicoId = $medicoId AND DataHoraConsulta > $agora";
+            command.CommandText = "SELECT COUNT(1) FROM Consultas WHERE MedicoId = @medicoId AND DataHoraConsulta > @agora";
 
             var parametroMedicoId = command.CreateParameter();
-            parametroMedicoId.ParameterName = "$medicoId";
+            parametroMedicoId.ParameterName = "@medicoId";
             parametroMedicoId.Value = medicoId;
             command.Parameters.Add(parametroMedicoId);
 
             var parametroAgora = command.CreateParameter();
-            parametroAgora.ParameterName = "$agora";
+            parametroAgora.ParameterName = "@agora";
             parametroAgora.Value = DateTime.Now;
             command.Parameters.Add(parametroAgora);
 

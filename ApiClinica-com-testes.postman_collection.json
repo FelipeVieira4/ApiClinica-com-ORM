@@ -1,0 +1,1367 @@
+{
+  "info": {
+    "name": "ApiClinica - Trabalho N2",
+    "description": "API REST com ORM e DTO - Projeto de Engenharia de Software - Com Suite de Testes Integrada",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5070"
+    },
+    {
+      "key": "pacienteId",
+      "value": ""
+    },
+    {
+      "key": "medicoId",
+      "value": ""
+    },
+    {
+      "key": "consultaId",
+      "value": ""
+    },
+    {
+      "key": "pacienteId_consulta",
+      "value": ""
+    },
+    {
+      "key": "medicoId_consulta",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "PACIENTES",
+      "item": [
+        {
+          "name": "GET - Listar todos pacientes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5070/api/pacientes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET - Buscar paciente por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes/{{pacienteId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes",
+                "{{pacienteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST - Criar paciente (Válido)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria@email.com\",\n  \"telefone\": \"11987654321\",\n  \"dataNasc\": \"1995-06-15\",\n  \"cpf\": \"12345678909\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5070/api/pacientes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST - Criar paciente (Email inválido)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Santos\",\n  \"email\": \"email-invalido\",\n  \"telefone\": \"11987654321\",\n  \"dataNasc\": \"1990-03-20\",\n  \"cpf\": \"98765432109\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5070/api/pacientes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST - Criar paciente (CPF inválido)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Carlos CPF Errado\",\n  \"email\": \"carlos.cpf@email.com\",\n  \"telefone\": \"11987654321\",\n  \"dataNasc\": \"1991-01-01\",\n  \"cpf\": \"12345678900\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST - Criar paciente (Telefone inválido)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Telefone Errado\",\n  \"email\": \"telefone.errado@email.com\",\n  \"telefone\": \"11999\",\n  \"dataNasc\": \"1991-01-01\",\n  \"cpf\": \"98765432109\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST - Criar paciente (CPF duplicado)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Ana Costa\",\n  \"email\": \"ana@email.com\",\n  \"telefone\": \"11987654321\",\n  \"dataNasc\": \"1992-01-10\",\n  \"cpf\": \"12345678909\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5070/api/pacientes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST - Criar paciente (Data futura)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Pedro Oliveira\",\n  \"email\": \"pedro@email.com\",\n  \"telefone\": \"11987654321\",\n  \"dataNasc\": \"2030-12-25\",\n  \"cpf\": \"55555555555\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5070/api/pacientes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Atualizar paciente (Válido)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva Atualizado\",\n  \"email\": \"maria.novo@email.com\",\n  \"telefone\": \"11999999999\",\n  \"dataNasc\": \"1995-06-15\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes/{{pacienteId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes",
+                "{{pacienteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Tentar alterar CPF (Deve falhar)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cpf\": \"99999999999\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes/{{pacienteId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes",
+                "{{pacienteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Atualizar paciente (Email inválido)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"email-invalido\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes/{{pacienteId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes",
+                "{{pacienteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Atualizar paciente (Telefone inválido)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefone\": \"123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes/{{pacienteId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes",
+                "{{pacienteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Atualizar paciente (Data futura)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataNasc\": \"2035-01-01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes/{{pacienteId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes",
+                "{{pacienteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Paciente inexistente",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Nao Deve Atualizar\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes/999999",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes",
+                "999999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE - Paciente inexistente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes/999999",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes",
+                "999999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE - Deletar paciente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes/{{pacienteId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "pacientes",
+                "{{pacienteId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "MÉDICOS",
+      "item": [
+        {
+          "name": "GET - Listar todos médicos",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5070/api/medicos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "medicos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET - Buscar médico por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos/{{medicoId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "medicos",
+                "{{medicoId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST - Criar médico (Válido)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Dr. Carlos Mendes\",\n  \"email\": \"carlos@clinica.com\",\n  \"telefone\": \"11991234567\",\n  \"crm\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5070/api/medicos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "medicos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST - Criar médico (Email inválido)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Dr. João Silva\",\n  \"email\": \"email-invalido\",\n  \"telefone\": \"11991234567\",\n  \"crm\": \"654321\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5070/api/medicos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "medicos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST - Criar médico (Telefone inválido)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Dr. Telefone Errado\",\n  \"email\": \"telefone.medico@clinica.com\",\n  \"telefone\": \"1199\",\n  \"crm\": \"654321\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "medicos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Atualizar médico (Válido)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Dr. Carlos Mendes Atualizado\",\n  \"email\": \"carlos.novo@clinica.com\",\n  \"telefone\": \"11999999999\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos/{{medicoId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "medicos",
+                "{{medicoId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Tentar alterar CRM (Deve falhar)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"crm\": \"999999\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos/{{medicoId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "medicos",
+                "{{medicoId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Atualizar médico (Email inválido)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"email-invalido\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos/{{medicoId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "medicos",
+                "{{medicoId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Atualizar médico (Telefone inválido)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefone\": \"123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos/{{medicoId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "medicos",
+                "{{medicoId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Medico inexistente",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Nao Deve Atualizar\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos/999999",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "medicos",
+                "999999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE - Medico inexistente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos/999999",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "medicos",
+                "999999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE - Deletar médico",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos/{{medicoId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "medicos",
+                "{{medicoId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CONSULTAS",
+      "item": [
+        {
+          "name": "GET - Listar todas consultas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5070/api/consultas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET - Buscar consulta por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas",
+                "{{consultaId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST - Criar consulta (Válido - Futuro)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": {{pacienteId}},\n  \"medicoId\": {{medicoId}},\n  \"dataHoraConsulta\": \"2026-05-20T10:00:00\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5070/api/consultas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST - Criar consulta (Paciente não existe)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": 999,\n  \"medicoId\": {{medicoId}},\n  \"dataHoraConsulta\": \"2026-05-20T14:00:00\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5070/api/consultas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST - Criar consulta (Médico não existe)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": {{pacienteId}},\n  \"medicoId\": 999,\n  \"dataHoraConsulta\": \"2026-05-20T14:30:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST - Criar consulta (Data no passado)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": {{pacienteId}},\n  \"medicoId\": {{medicoId}},\n  \"dataHoraConsulta\": \"2020-05-20T10:00:00\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5070/api/consultas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST - Criar consulta (Sobreposição de horário)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": {{pacienteId}},\n  \"medicoId\": {{medicoId}},\n  \"dataHoraConsulta\": \"2026-05-20T10:15:00\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5070/api/consultas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Atualizar consulta (Trocar horário)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataHoraConsulta\": \"2026-05-20T15:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas",
+                "{{consultaId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Atualizar consulta (Trocar médico)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"medicoId\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas",
+                "{{consultaId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Atualizar consulta (Paciente inexistente)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": 999\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas",
+                "{{consultaId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Atualizar consulta (Médico inexistente)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"medicoId\": 999\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas",
+                "{{consultaId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Atualizar consulta (Data passada)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataHoraConsulta\": \"2020-05-20T09:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas",
+                "{{consultaId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Atualizar consulta (Sobreposicao de horario)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataHoraConsulta\": \"2026-05-20T10:15:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas",
+                "{{consultaId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH - Consulta inexistente",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dataHoraConsulta\": \"2026-12-01T10:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/999999",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas",
+                "999999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE - Consulta inexistente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/999999",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas",
+                "999999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE - Deletar consulta",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5070",
+              "path": [
+                "api",
+                "consultas",
+                "{{consultaId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "VALIDAÇÃO DE REGRAS (DIAGNÓSTICO)",
+      "description": "Testes diagnósticos para validar regras de negócio",
+      "item": [
+        {
+          "name": "1. Criar Paciente para DELETE",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Paciente DELETE TEST\",\n  \"cpf\": \"12345678901\",\n  \"email\": \"delete.test@example.com\",\n  \"telefone\": \"11999999999\",\n  \"dataNasc\": \"1990-01-15T00:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pacientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2. Salvar ID do Paciente",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pacientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. Criar Médico para DELETE",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Médico DELETE TEST\",\n  \"crm\": \"DELETE001\",\n  \"email\": \"medico.delete@example.com\",\n  \"telefone\": \"11988888888\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "medicos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4. Criar Consulta Futura com Paciente DELETE",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": 1,\n  \"medicoId\": 1,\n  \"dataHoraConsulta\": \"2026-12-25T10:00:00\",\n  \"descricao\": \"Consulta futura para teste de bloqueio de exclusão\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "consultas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5. TESTE: Tentar DELETE Paciente com Consulta Futura (DEVE BLOQUEAR)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pacientes",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "6. TESTE: Tentar DELETE Médico com Consulta Futura (DEVE BLOQUEAR)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "medicos",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

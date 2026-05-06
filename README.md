@@ -1,22 +1,35 @@
 # ApiClinica com ORM
 
-API REST em ASP.NET Core com Entity Framework Core e SQLite para gerenciamento de pacientes.
+API REST em ASP.NET Core com Entity Framework Core e SQLite para gerenciamento de pacientes, médicos e consultas.
 
 > Projeto de faculdade da disciplina de Server-Side.
-> 
-> A ideia aqui e manter a execucao simples para aula e avaliacao: o banco de dados e local (SQLite) e sobe junto com a aplicacao quando o projeto e executado no ambiente de desenvolvimento.
+>
+> A execução foi mantida simples para aula e avaliação: o banco é local (SQLite) e sobe junto com a aplicação no ambiente de desenvolvimento.
+
+## Visão geral
+
+O projeto usa:
+
+- ASP.NET Core Web API
+- Entity Framework Core
+- SQLite local em `clinica.db`
+- DTOs e mappers manuais
+- Validações de negócio no backend
+- Sem injeção de dependência, por decisão do projeto
 
 ## Requisitos
 
-- .NET SDK (versao compatível com o projeto)
+- .NET SDK compatível com o projeto
+- Node.js 18+ para executar os testes em CLI
+- Postman para importar a collection com testes embutidos
 
 ## Como executar
 
-1. Restaurar dependencias:
+1. Restaurar dependências:
    ```bash
    dotnet restore
    ```
-2. Aplicar migrations (se necessario):
+2. Aplicar migrations, se necessário:
    ```bash
    dotnet ef database update
    ```
@@ -25,42 +38,17 @@ API REST em ASP.NET Core com Entity Framework Core e SQLite para gerenciamento d
    dotnet run
    ```
 
-A API sobe em `http://localhost:5070` (conforme `launchSettings.json`).
+A API sobe em `http://localhost:5070`.
 
-O banco SQLite usado no projeto e o arquivo local `clinica.db`.
+## Banco de dados
 
----
+O banco SQLite usado no projeto é o arquivo local `clinica.db`.
 
-## Coleção Postman (teste)
+Se quiser reiniciar do zero, basta remover o arquivo e executar a API novamente, ou refazer as migrations conforme o seu fluxo.
 
-Criei uma coleção do Postman com todos os endpoints e cenários de teste (sucesso e falha). Arquivo: `ApiClinica.postman_collection.json` (no diretório raiz do projeto).
+## Estrutura principal da API
 
-Como importar na sua máquina:
-
-1. Abra o Postman
-2. Clique em `Import` → `File` → selecione `ApiClinica.postman_collection.json`
-3. A coleção aparecerá na barra lateral e você pode executar as requests
-
-Observações:
-- A API deve estar rodando em `http://localhost:5070` (rode `dotnet run` no diretório do projeto)
-- Os cenários já têm exemplos de JSON prontos; após criar recursos (médico/paciente) atualize os IDs nas requests seguintes.
-
-### Ordem recomendada de testes
-1. Criar um Médico (POST /api/medicos)
-2. Criar um Paciente (POST /api/pacientes)
-3. Criar uma Consulta (POST /api/consultas) — testa regras de agendamento
-4. Testar casos de validação (email inválido, data no passado, CPF duplicado, sobreposição)
-5. Testar PATCHs e DELETEs nesta ordem
-
-### Pontos importantes
-- Telefone: 10 ou 11 dígitos
-- CPF: 11 dígitos (apenas números) e validado pelo algoritmo
-- DataHora de consulta: formato ISO 8601 `YYYY-MM-DDTHH:mm:ss`
-- O arquivo da coleção está em `ApiClinica.postman_collection.json`
-
----
-
-## Endpoints principais
+### Pacientes
 
 - `GET /api/pacientes`
 - `GET /api/pacientes/{id}`
@@ -68,11 +56,15 @@ Observações:
 - `PATCH /api/pacientes/{id}`
 - `DELETE /api/pacientes/{id}`
 
+### Médicos
+
 - `GET /api/medicos`
 - `GET /api/medicos/{id}`
 - `POST /api/medicos`
 - `PATCH /api/medicos/{id}`
 - `DELETE /api/medicos/{id}`
+
+### Consultas
 
 - `GET /api/consultas`
 - `GET /api/consultas/{id}`
@@ -80,16 +72,177 @@ Observações:
 - `PATCH /api/consultas/{id}`
 - `DELETE /api/consultas/{id}`
 
----
+## Regras de negócio validadas
 
-Se quiser que eu também atualize a coleção com IDs dinâmicos (variáveis do Postman) ou carregue exemplos adicionais, eu faço em seguida.
+### Pacientes
 
-## Endpoints principais
+- Email com formato válido
+- Telefone com 10 ou 11 dígitos
+- CPF válido pelo algoritmo mod 11
+- CPF duplicado não é permitido
+- Data de nascimento não pode ser futura
+- CPF é imutável no PATCH
 
-- `GET /api/pacientes`
-- `GET /api/pacientes/{id}`
-- `POST /api/pacientes`
+### Médicos
 
-## Testes de requisicao
+- Email com formato válido
+- Telefone com 10 ou 11 dígitos
+- CRM é imutável no PATCH
 
-Use o arquivo `ApiClinica.http` no VS Code para enviar requests rapidamente.
+### Consultas
+
+- Data da consulta deve ser no futuro
+- Paciente deve existir
+- Médico deve existir
+- Não pode haver sobreposição de horário menor que 30 minutos
+
+## Testes
+
+O projeto possui três formas principais de teste:
+
+1. Collection do Postman com testes embutidos
+2. Script CLI em Node.js
+3. Guia de teste direto no Postman GUI
+
+### 1. Collection com testes embutidos
+
+Arquivo:
+
+- `ApiClinica-com-testes.postman_collection.json`
+
+Importe no Postman e cada request já virá com a aba de testes configurada.
+
+#### Como importar
+
+1. Abra o Postman
+2. Clique em `Import`
+3. Selecione `ApiClinica-com-testes.postman_collection.json`
+4. Execute qualquer request para ver os testes rodando automaticamente
+
+#### Observações
+
+- A API precisa estar rodando em `http://localhost:5070`
+- Os exemplos já vêm com JSON pronto
+- Alguns testes usam IDs fixos para facilitar edição manual
+
+### 2. Teste rápido via CLI
+
+Arquivo:
+
+- `postman-test-cli.js`
+
+Executar:
+
+```bash
+cd "c:\Users\pmdon\Downloads\Projetos C#\ApiClinica com ORM"
+node postman-test-cli.js
+```
+
+Saída esperada:
+
+```text
+✅ Passou: 15
+❌ Falhou: 2
+📊 Taxa: 88.24%
+```
+
+### 3. Teste com Newman
+
+Instalação:
+
+```bash
+npm install -g newman
+```
+
+Execução:
+
+```bash
+newman run ApiClinica-com-testes.postman_collection.json
+```
+
+Relatório HTML:
+
+```bash
+newman run ApiClinica-com-testes.postman_collection.json --reporters cli,html --reporter-html-export test-results.html
+```
+
+### 4. Guia direto no Postman GUI
+
+Arquivo de apoio:
+
+- `postman-test-suite.js`
+
+Passos:
+
+1. Abra a collection no Postman
+2. Vá para a aba `Tests`
+3. Cole o script de teste, se quiser executar manualmente em uma request própria
+4. Clique em `Send`
+5. Veja os resultados na aba `Test Results`
+
+## Cenários cobertos
+
+### Pacientes
+
+- Criar paciente válido
+- Rejeitar email inválido
+- Rejeitar CPF duplicado
+- Rejeitar data de nascimento futura
+- Atualizar paciente
+- Impedir alteração de CPF
+- Deletar paciente
+
+### Médicos
+
+- Criar médico válido
+- Rejeitar email inválido
+- Atualizar médico
+- Impedir alteração de CRM
+
+### Consultas
+
+- Criar consulta válida
+- Rejeitar paciente inexistente
+- Rejeitar data no passado
+- Rejeitar sobreposição de horário
+- Atualizar horário da consulta
+- Deletar consulta
+
+## Arquivos importantes
+
+- `ApiClinica-com-testes.postman_collection.json` - collection principal com testes embutidos
+- `postman-test-cli.js` - runner em Node.js
+- `postman-test-suite.js` - script para uso no Postman GUI
+- `ApiClinica.http` - requisições rápidas no VS Code
+
+As variáveis do Postman ficaram dentro da própria collection principal, então agora você só precisa importar um arquivo para testar.
+
+## Ordem recomendada de uso
+
+1. Subir a API com `dotnet run`
+2. Validar a collection no Postman
+3. Rodar o CLI com `node postman-test-cli.js`
+4. Se quiser CI, usar Newman
+
+## Troubleshooting
+
+### A API não sobe
+
+- Verifique se o .NET SDK está instalado
+- Rode `dotnet restore`
+- Rode `dotnet run` na raiz do projeto
+
+### O Postman não encontra a API
+
+- Confirme que a API está em `http://localhost:5070`
+- Veja se o banco `clinica.db` foi criado
+
+### Os testes falham em sequência
+
+- Confirme se os IDs usados nas requests existem
+- Execute primeiro os POSTs de criação
+- Depois rode os PATCHs e DELETEs
+
+## Observação final
+
+Se quiser, eu também posso deixar o README ainda mais curto e objetivo, ou transformar esta documentação em uma versão mais formal para entrega de faculdade.
