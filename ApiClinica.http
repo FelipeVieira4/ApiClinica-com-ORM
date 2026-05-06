@@ -6,30 +6,6 @@ Accept: application/json
 
 ###
 
-# Listar clientes
-GET {{ApiClinica_HostAddress}}/api/clientes
-Accept: application/json
-
-###
-
-# Buscar cliente por id
-GET {{ApiClinica_HostAddress}}/api/clientes/1
-Accept: application/json
-
-###
-
-# Criar cliente
-POST {{ApiClinica_HostAddress}}/api/clientes
-Content-Type: application/json
-
-{
-	"nome": "Ana Souza",
-	"email": "ana@email.com",
-	"telefone": "11988887777"
-}
-
-###
-
 # Buscar paciente por id
 GET {{ApiClinica_HostAddress}}/api/pacientes/1
 Accept: application/json

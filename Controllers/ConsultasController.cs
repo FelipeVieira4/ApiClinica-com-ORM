@@ -97,7 +97,7 @@ public class ConsultasController: ControllerBase
 
         if (consultaUpdateDTO.PacienteId is not null)
         {
-            var paciente = await _context.Pacientes.FindAsync(consulta.PacienteId);
+            var paciente = await _context.Pacientes.FindAsync((int)consultaUpdateDTO.PacienteId);
             if (paciente == null) return BadRequest(new { mensagem = "Paciente não encontrado!" });
             
             consulta.PacienteId=(int)consultaUpdateDTO.PacienteId;
@@ -105,7 +105,7 @@ public class ConsultasController: ControllerBase
 
         if (consultaUpdateDTO.MedicoId is not null)
         {
-            var medico = await _context.Medicos.FindAsync(consulta.MedicoId);
+            var medico = await _context.Medicos.FindAsync((int)consultaUpdateDTO.MedicoId);
             if (medico == null) return BadRequest(new { mensagem = "Médico não encontrado!" });
 
             consulta.MedicoId=(int)consultaUpdateDTO.MedicoId;
