@@ -240,7 +240,7 @@ public class PacientesController : ControllerBase
             }
 
             using var command = connection.CreateCommand();
-            command.CommandText = "SELECT COUNT(1) FROM Consultas WHERE PacienteId = @pacienteId AND DataHoraConsulta > @agora";
+            command.CommandText = "SELECT COUNT(1) FROM Consultas WHERE PacienteId = @pacienteId AND DataHoraConsulta >= @agora";
 
             var parametroPacienteId = command.CreateParameter();
             parametroPacienteId.ParameterName = "@pacienteId";
