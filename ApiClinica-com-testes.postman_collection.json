@@ -69,7 +69,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/pacientes/{{pacienteId}}",
+              "raw": "http://localhost:5070/api/pacientes/{{pacienteId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -154,7 +154,7 @@
               "raw": "{\n  \"nome\": \"Carlos CPF Errado\",\n  \"email\": \"carlos.cpf@email.com\",\n  \"telefone\": \"11987654321\",\n  \"dataNasc\": \"1991-01-01\",\n  \"cpf\": \"12345678900\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/pacientes",
+              "raw": "http://localhost:5070/api/pacientes",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -182,7 +182,7 @@
               "raw": "{\n  \"nome\": \"Telefone Errado\",\n  \"email\": \"telefone.errado@email.com\",\n  \"telefone\": \"11999\",\n  \"dataNasc\": \"1991-01-01\",\n  \"cpf\": \"98765432109\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/pacientes",
+              "raw": "http://localhost:5070/api/pacientes",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -266,7 +266,7 @@
               "raw": "{\n  \"nome\": \"Maria Silva Atualizado\",\n  \"email\": \"maria.novo@email.com\",\n  \"telefone\": \"11999999999\",\n  \"dataNasc\": \"1995-06-15\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/pacientes/{{pacienteId}}",
+              "raw": "http://localhost:5070/api/pacientes/{{pacienteId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -295,7 +295,7 @@
               "raw": "{\n  \"cpf\": \"99999999999\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/pacientes/{{pacienteId}}",
+              "raw": "http://localhost:5070/api/pacientes/{{pacienteId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -324,7 +324,7 @@
               "raw": "{\n  \"email\": \"email-invalido\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/pacientes/{{pacienteId}}",
+              "raw": "http://localhost:5070/api/pacientes/{{pacienteId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -353,7 +353,7 @@
               "raw": "{\n  \"telefone\": \"123\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/pacientes/{{pacienteId}}",
+              "raw": "http://localhost:5070/api/pacientes/{{pacienteId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -382,7 +382,7 @@
               "raw": "{\n  \"dataNasc\": \"2035-01-01\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/pacientes/{{pacienteId}}",
+              "raw": "http://localhost:5070/api/pacientes/{{pacienteId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -411,7 +411,7 @@
               "raw": "{\n  \"nome\": \"Nao Deve Atualizar\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/pacientes/999999",
+              "raw": "http://localhost:5070/api/pacientes/999999",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -431,7 +431,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/pacientes/999999",
+              "raw": "http://localhost:5070/api/pacientes/999999",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -451,7 +451,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/pacientes/{{pacienteId}}",
+              "raw": "http://localhost:5070/api/pacientes/{{pacienteId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -505,7 +505,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/medicos/{{medicoId}}",
+              "raw": "http://localhost:5070/api/medicos/{{medicoId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -590,7 +590,7 @@
               "raw": "{\n  \"nome\": \"Dr. Telefone Errado\",\n  \"email\": \"telefone.medico@clinica.com\",\n  \"telefone\": \"1199\",\n  \"crm\": \"654321\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/medicos",
+              "raw": "http://localhost:5070/api/medicos",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -618,7 +618,7 @@
               "raw": "{\n  \"nome\": \"Dr. Carlos Mendes Atualizado\",\n  \"email\": \"carlos.novo@clinica.com\",\n  \"telefone\": \"11999999999\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/medicos/{{medicoId}}",
+              "raw": "http://localhost:5070/api/medicos/{{medicoId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -647,7 +647,7 @@
               "raw": "{\n  \"crm\": \"999999\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/medicos/{{medicoId}}",
+              "raw": "http://localhost:5070/api/medicos/{{medicoId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -676,7 +676,7 @@
               "raw": "{\n  \"email\": \"email-invalido\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/medicos/{{medicoId}}",
+              "raw": "http://localhost:5070/api/medicos/{{medicoId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -705,7 +705,7 @@
               "raw": "{\n  \"telefone\": \"123\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/medicos/{{medicoId}}",
+              "raw": "http://localhost:5070/api/medicos/{{medicoId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -734,7 +734,7 @@
               "raw": "{\n  \"nome\": \"Nao Deve Atualizar\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/medicos/999999",
+              "raw": "http://localhost:5070/api/medicos/999999",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -754,7 +754,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/medicos/999999",
+              "raw": "http://localhost:5070/api/medicos/999999",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -774,7 +774,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/medicos/{{medicoId}}",
+              "raw": "http://localhost:5070/api/medicos/{{medicoId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -828,7 +828,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "raw": "http://localhost:5070/api/consultas/{{consultaId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -913,7 +913,7 @@
               "raw": "{\n  \"pacienteId\": {{pacienteId}},\n  \"medicoId\": 999,\n  \"dataHoraConsulta\": \"2026-05-20T14:30:00\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/consultas",
+              "raw": "http://localhost:5070/api/consultas",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -997,7 +997,7 @@
               "raw": "{\n  \"dataHoraConsulta\": \"2026-05-20T15:00:00\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "raw": "http://localhost:5070/api/consultas/{{consultaId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -1026,7 +1026,7 @@
               "raw": "{\n  \"medicoId\": 2\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "raw": "http://localhost:5070/api/consultas/{{consultaId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -1055,7 +1055,7 @@
               "raw": "{\n  \"pacienteId\": 999\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "raw": "http://localhost:5070/api/consultas/{{consultaId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -1084,7 +1084,7 @@
               "raw": "{\n  \"medicoId\": 999\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "raw": "http://localhost:5070/api/consultas/{{consultaId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -1113,7 +1113,7 @@
               "raw": "{\n  \"dataHoraConsulta\": \"2020-05-20T09:00:00\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "raw": "http://localhost:5070/api/consultas/{{consultaId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -1142,7 +1142,7 @@
               "raw": "{\n  \"dataHoraConsulta\": \"2026-05-20T10:15:00\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "raw": "http://localhost:5070/api/consultas/{{consultaId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -1171,7 +1171,7 @@
               "raw": "{\n  \"dataHoraConsulta\": \"2026-12-01T10:00:00\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/consultas/999999",
+              "raw": "http://localhost:5070/api/consultas/999999",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -1191,7 +1191,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/consultas/999999",
+              "raw": "http://localhost:5070/api/consultas/999999",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -1211,7 +1211,7 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/consultas/{{consultaId}}",
+              "raw": "http://localhost:5070/api/consultas/{{consultaId}}",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -1246,9 +1246,9 @@
               "raw": "{\n  \"nome\": \"Paciente DELETE TEST\",\n  \"cpf\": \"12345678901\",\n  \"email\": \"delete.test@example.com\",\n  \"telefone\": \"11999999999\",\n  \"dataNasc\": \"1990-01-15T00:00:00.000Z\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/pacientes",
+              "raw": "http://localhost:5070/api/pacientes",
               "host": [
-                "{{baseUrl}}"
+                "http://localhost:5070"
               ],
               "path": [
                 "api",
@@ -1262,9 +1262,9 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{baseUrl}}/api/pacientes",
+              "raw": "http://localhost:5070/api/pacientes",
               "host": [
-                "{{baseUrl}}"
+                "http://localhost:5070"
               ],
               "path": [
                 "api",
@@ -1288,9 +1288,9 @@
               "raw": "{\n  \"nome\": \"Médico DELETE TEST\",\n  \"crm\": \"DELETE001\",\n  \"email\": \"medico.delete@example.com\",\n  \"telefone\": \"11988888888\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/medicos",
+              "raw": "http://localhost:5070/api/medicos",
               "host": [
-                "{{baseUrl}}"
+                "http://localhost:5070"
               ],
               "path": [
                 "api",
@@ -1314,9 +1314,9 @@
               "raw": "{\n  \"pacienteId\": 1,\n  \"medicoId\": 1,\n  \"dataHoraConsulta\": \"2026-12-25T10:00:00\",\n  \"descricao\": \"Consulta futura para teste de bloqueio de exclusão\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/consultas",
+              "raw": "http://localhost:5070/api/consultas",
               "host": [
-                "{{baseUrl}}"
+                "http://localhost:5070"
               ],
               "path": [
                 "api",
@@ -1331,9 +1331,9 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/pacientes/1",
+              "raw": "http://localhost:5070/api/pacientes/1",
               "host": [
-                "{{baseUrl}}"
+                "http://localhost:5070"
               ],
               "path": [
                 "api",
@@ -1349,9 +1349,9 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/medicos/1",
+              "raw": "http://localhost:5070/api/medicos/1",
               "host": [
-                "{{baseUrl}}"
+                "http://localhost:5070"
               ],
               "path": [
                 "api",
