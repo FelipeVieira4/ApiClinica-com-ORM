@@ -2,12 +2,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ApiClinica.Models;
 
-/**
- * Descrição: Consulta Controller
- * Criado por: Felipe Vieira
- * Data: 03/05/2026
- */
-
 public class Consulta
 {
     public int Id { get; set; }

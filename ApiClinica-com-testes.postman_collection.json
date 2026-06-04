@@ -22,6 +22,14 @@
       "value": ""
     },
     {
+      "key": "ADMIN_TOKEN",
+      "value": ""
+    },
+    {
+      "key": "USER_TOKEN",
+      "value": ""
+    },
+    {
       "key": "pacienteId_consulta",
       "value": ""
     },
@@ -91,6 +99,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
               }
             ],
             "body": {
@@ -110,6 +122,21 @@
               ]
             }
           }
+          ,
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+                  "var json = pm.response.json();",
+                  "if (json && json.id) { pm.collectionVariables.set('pacienteId', json.id); }",
+                  "pm.test('Saved pacienteId', function () { pm.expect(pm.collectionVariables.get('pacienteId')).to.not.be.empty; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
         },
         {
           "name": "POST - Criar paciente (Email inválido)",
@@ -527,6 +554,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
               }
             ],
             "body": {
@@ -546,6 +577,21 @@
               ]
             }
           }
+          ,
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+                  "var json = pm.response.json();",
+                  "if (json && json.id) { pm.collectionVariables.set('medicoId', json.id); }",
+                  "pm.test('Saved medicoId', function () { pm.expect(pm.collectionVariables.get('medicoId')).to.not.be.empty; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
         },
         {
           "name": "POST - Criar médico (Email inválido)",
@@ -850,6 +896,10 @@
               {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
               }
             ],
             "body": {
@@ -869,6 +919,21 @@
               ]
             }
           }
+          ,
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', function () { pm.response.to.have.status(201); });",
+                  "var json = pm.response.json();",
+                  "if (json && json.id) { pm.collectionVariables.set('consultaId', json.id); }",
+                  "pm.test('Saved consultaId', function () { pm.expect(pm.collectionVariables.get('consultaId')).to.not.be.empty; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
         },
         {
           "name": "POST - Criar consulta (Paciente não existe)",
@@ -1360,6 +1425,102 @@
               ]
             }
           }
+        }
+      ]
+    }
+    ,
+    {
+      "name": "AUTH",
+      "item": [
+        {
+          "name": "LOGIN - Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}" },
+            "url": { "raw": "http://localhost:5070/api/auth/login", "protocol": "http", "host": [ "localhost" ], "port": "5070", "path": [ "api", "auth", "login" ] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login admin returns 200', function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "if (json && json.token) { pm.collectionVariables.set('ADMIN_TOKEN', json.token); }",
+                  "pm.test('Saved ADMIN_TOKEN', function () { pm.expect(pm.collectionVariables.get('ADMIN_TOKEN')).to.not.be.empty; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "LOGIN - User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"user\",\n  \"password\": \"user123\"\n}" },
+            "url": { "raw": "http://localhost:5070/api/auth/login", "protocol": "http", "host": [ "localhost" ], "port": "5070", "path": [ "api", "auth", "login" ] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login user returns 200', function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "if (json && json.token) { pm.collectionVariables.set('USER_TOKEN', json.token); }",
+                  "pm.test('Saved USER_TOKEN', function () { pm.expect(pm.collectionVariables.get('USER_TOKEN')).to.not.be.empty; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+    ,
+    {
+      "name": "ROLE TESTS",
+      "item": [
+        {
+          "name": "PATCH paciente com USER (deve 403)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{USER_TOKEN}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"telefone\": \"11900009999\"\n}" },
+            "url": { "raw": "http://localhost:5070/api/pacientes/{{pacienteId}}", "protocol": "http", "host": [ "localhost" ], "port": "5070", "path": [ "api", "pacientes", "{{pacienteId}}" ] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": [ "pm.test('User cannot patch paciente (403)', function () { pm.response.to.have.status(403); });" ], "type": "text/javascript" }
+            }
+          ]
+        },
+        {
+          "name": "DELETE paciente com USER (deve 403)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{USER_TOKEN}}" }
+            ],
+            "url": { "raw": "http://localhost:5070/api/pacientes/{{pacienteId}}", "protocol": "http", "host": [ "localhost" ], "port": "5070", "path": [ "api", "pacientes", "{{pacienteId}}" ] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": { "exec": [ "pm.test('User cannot delete paciente (403)', function () { pm.response.to.have.status(403); });" ], "type": "text/javascript" }
+            }
+          ]
         }
       ]
     }

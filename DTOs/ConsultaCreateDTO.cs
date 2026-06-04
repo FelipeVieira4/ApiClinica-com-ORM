@@ -2,16 +2,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ApiClinica.DTOs;
 
-/**
- * Descrição: Consulta Create - Data Transfer Object(DTO)
- * Criado por: Felipe Vieira
- * Data: 03/05/2026
- */
-
 public class ConsultaCreateDTO
 {
+    [Required]
     public required int PacienteId { get; set; }
+
+    [Required]
     public required int MedicoId { get; set; }
 
+    [Required]
     public required DateTime DataHoraConsulta { get; set; }
 }

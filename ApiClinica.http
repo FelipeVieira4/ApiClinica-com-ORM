@@ -1,43 +1,72 @@
 @ApiClinica_HostAddress = http://localhost:5070
+@TOKEN = 
 
-# Listar pacientes
-GET {{ApiClinica_HostAddress}}/api/pacientes
-Accept: application/json
+# Uso recomendado:
+# As contas obrigatórias `admin` e `user` já são criadas automaticamente no startup.
+# 1) Execute o bloco "LOGIN Admin" ou "LOGIN User" e copie o token retornado.
+# 2) Cole o token no `@TOKEN = ` acima.
+# 3) Execute as requisições autenticadas (criar paciente, médico, consulta).
 
-###
+### LOGIN Admin (copie token e cole em @TOKEN)
+POST {{ApiClinica_HostAddress}}/api/auth/login
+Content-Type: application/json
 
-# Buscar paciente por id
-GET {{ApiClinica_HostAddress}}/api/pacientes/1
-Accept: application/json
+{
+	"username": "admin",
+	"password": "admin123"
+}
 
-###
+### LOGIN User (copie token para testar permissões de User)
+POST {{ApiClinica_HostAddress}}/api/auth/login
+Content-Type: application/json
 
-# Criar paciente
+{
+	"username": "user",
+	"password": "user123"
+}
+
+### CRIAR PACIENTE (use token do Admin)
 POST {{ApiClinica_HostAddress}}/api/pacientes
+Authorization: Bearer {{TOKEN}}
 Content-Type: application/json
 
 {
-	"nome": "Maria Silva",
-	"email": "maria@email.com",
-	"telefone": "11999999999",
-	"dataNasc": "1998-05-10",
-	"cpf": "12345678900"
+	"nome": "Paciente Teste",
+	"email": "paciente.teste@example.com",
+	"telefone": "11999990001",
+	"dataNasc": "1990-01-01",
+	"cpf": "11122233344"
 }
 
-###
+### CRIAR MEDICO (use token do Admin)
+POST {{ApiClinica_HostAddress}}/api/medicos
+Authorization: Bearer {{TOKEN}}
+Content-Type: application/json
 
-# Atualizar parcialmente paciente
+{
+	"nome": "Dr. Teste",
+	"email": "dr.teste@example.com",
+	"telefone": "11988880001",
+	"crm": "CRM9999"
+}
+
+### CRIAR CONSULTA (use token do Admin)
+POST {{ApiClinica_HostAddress}}/api/consultas
+Authorization: Bearer {{TOKEN}}
+Content-Type: application/json
+
+{
+	"pacienteId": 1,
+	"medicoId": 1,
+	"dataHoraConsulta": "2026-06-10T10:00:00"
+}
+
+### EXEMPLO: tentar PATCH/DELETE com token de `user` (deve retornar 403)
 PATCH {{ApiClinica_HostAddress}}/api/pacientes/1
+Authorization: Bearer {{TOKEN}}
 Content-Type: application/json
 
 {
-	"nome": "Maria Silva Atualizada",
-	"telefone": "11988887777"
+	"telefone": "11900000222"
 }
 
-###
-
-# Remover paciente
-DELETE {{ApiClinica_HostAddress}}/api/pacientes/1
-
-###

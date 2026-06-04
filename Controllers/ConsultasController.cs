@@ -5,153 +5,73 @@ using ApiClinica.Mappers;
 using ApiClinica.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ApiClinica.Interfaces;
 
 namespace ApiClinica.Controllers;
 
-/**
- * Descrição: Consulta  Controller
- * Criado por: Felipe Vieira
- * Data: 04/05/2026
- */
-
 [ApiController]
 [Route("api/[controller]")]
-
+[Microsoft.AspNetCore.Authorization.Authorize]
 public class ConsultasController: ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IConsultaService _service;
 
-    public ConsultasController()
+    public ConsultasController(IConsultaService service)
     {
-        _context = new AppDbContext();
+        _service = service;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetConsultas()
     {
-        var consultas = await _context.Consultas.ToListAsync();
-
-        var consultasReadDTO = consultas
-            .Select(c => ConsultaMapper.ToReadDTO(c))
-            .ToList();
-
-        return Ok(consultasReadDTO);
+        var consultas = await _service.GetAllAsync();
+        return Ok(consultas);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetConsultaById(int id)
     {
-        var consulta = await _context.Consultas.FindAsync(id);
-
+        var consulta = await _service.GetByIdAsync(id);
         if (consulta == null) return NotFound();
-
-        return Ok(ConsultaMapper.ToReadDTO(consulta));
+        return Ok(consulta);
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateConsulta([FromBody] ConsultaCreateDTO consultaCreateDTO)
     {
-        var consulta = ConsultaMapper.ToModel(consultaCreateDTO);
-
-        if (consulta.DataHoraConsulta < DateTime.Now){
-            return BadRequest(new { mensagem = "Data e hora da consulta não pode ser no passado!" });
-        }
-
-        var consultas = await _context.Consultas.ToListAsync();
-        var consultasFiltradas = consultas
-            .Where(c => c.DataHoraConsulta >= DateTime.Now)
-            .Where(c => c.MedicoId == consulta.MedicoId || c.PacienteId == consulta.PacienteId)
-            //.Where(c => c.PacienteId == consulta.PacienteId)
-            .ToList();
-
-        DateTime dataHora = (DateTime)consulta.DataHoraConsulta;
-        foreach (var consulta2 in consultasFiltradas)
+        try
         {
-            if (dataHora>=consulta2.DataHoraConsulta && dataHora<=consulta2.DataHoraConsulta.AddMinutes(30)||
-                dataHora.AddMinutes(30)>=consulta2.DataHoraConsulta && dataHora.AddMinutes(30)<=consulta2.DataHoraConsulta.AddMinutes(30))
-            {
-                return BadRequest(new { mensagem = "Já existe uma consulta agendada para esse horário!" });
-            }
+            var consulta = await _service.CreateAsync(consultaCreateDTO);
+            return CreatedAtAction(nameof(GetConsultaById), new { id = consulta.Id }, consulta);
         }
-
-        var medico = await _context.Medicos.FindAsync(consulta.MedicoId);
-        if (medico == null) return BadRequest(new { mensagem = "Médico não encontrado!" });
-
-        var paciente = await _context.Pacientes.FindAsync(consulta.PacienteId);
-        if (paciente == null) return BadRequest(new { mensagem = "Paciente não encontrado!" });
-
-        _context.Consultas.Add(consulta);
-        await _context.SaveChangesAsync();
-
-        var consultaReadDTO = ConsultaMapper.ToReadDTO(consulta);
-
-        return CreatedAtAction(nameof(GetConsultaById), new { id = consulta.Id }, consultaReadDTO);
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { mensagem = ex.Message });
+        }
     }
 
     [HttpPatch("{id}")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateConsulta(int id, [FromBody] ConsultaUpdateDTO consultaUpdateDTO)
     {
-        var consulta = await _context.Consultas.FindAsync(id);
-
-        if(consulta == null) return NotFound();
-
-        if (consultaUpdateDTO.PacienteId is not null)
+        try
         {
-            var paciente = await _context.Pacientes.FindAsync((int)consultaUpdateDTO.PacienteId);
-            if (paciente == null) return BadRequest(new { mensagem = "Paciente não encontrado!" });
-            
-            consulta.PacienteId=(int)consultaUpdateDTO.PacienteId;
+            var consulta = await _service.UpdateAsync(id, consultaUpdateDTO);
+            if (consulta == null) return NotFound();
+            return Ok(consulta);
         }
-
-        if (consultaUpdateDTO.MedicoId is not null)
+        catch (ArgumentException ex)
         {
-            var medico = await _context.Medicos.FindAsync((int)consultaUpdateDTO.MedicoId);
-            if (medico == null) return BadRequest(new { mensagem = "Médico não encontrado!" });
-
-            consulta.MedicoId=(int)consultaUpdateDTO.MedicoId;
+            return BadRequest(new { mensagem = ex.Message });
         }
-
-        if (consultaUpdateDTO.DataHoraConsulta is not null)
-        {
-            if (consultaUpdateDTO.DataHoraConsulta < DateTime.Now)
-            {
-                return BadRequest(new { mensagem = "Data e hora da consulta não pode ser no passado!" });
-            }
-
-            consulta.DataHoraConsulta=(DateTime)consultaUpdateDTO.DataHoraConsulta;
-        }
-
-        var consultasLista = await _context.Consultas.ToListAsync();
-        var consultasFiltradas = consultasLista
-        .Where(c => c.DataHoraConsulta >= DateTime.Now)
-        .Where(c => (c.MedicoId == consulta.MedicoId || c.PacienteId == consulta.PacienteId) && c.Id != consulta.Id)
-        .ToList();
-
-        DateTime dataHora = (DateTime)consulta.DataHoraConsulta;
-        foreach (var consulta2 in consultasFiltradas)
-        {
-            if (dataHora>=consulta2.DataHoraConsulta && dataHora<=consulta2.DataHoraConsulta.AddMinutes(30)||
-                dataHora.AddMinutes(30)>=consulta2.DataHoraConsulta && dataHora.AddMinutes(30)<=consulta2.DataHoraConsulta.AddMinutes(30))
-            {
-                return BadRequest(new { mensagem = "Já existe uma consulta agendada para esse horário!" });
-            }
-        }
-
-        await _context.SaveChangesAsync();
-
-        return Ok(ConsultaMapper.ToReadDTO(consulta));
     }
 
     [HttpDelete("{id}")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteConsultas(int id)
     {
-        var consulta = await _context.Consultas.FindAsync(id);
-
-        if (consulta == null) return NotFound();
-
-        _context.Consultas.Remove(consulta);
-        await _context.SaveChangesAsync();
-
+        var ok = await _service.DeleteAsync(id);
+        if (!ok) return NotFound();
         return NoContent();
     }
 }

@@ -4,6 +4,7 @@ using ApiClinica.Data;
 using Microsoft.EntityFrameworkCore;
 using ApiClinica.DTOs;
 using ApiClinica.Mappers;
+using ApiClinica.Interfaces;
 using Microsoft.Data.Sqlite;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
@@ -14,270 +15,79 @@ namespace ApiClinica.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Microsoft.AspNetCore.Authorization.Authorize]
 public class PacientesController : ControllerBase
 {
-    private readonly AppDbContext _context;
-    private static readonly Regex TelefoneRegex = new("^\\d{10,11}$");
+    private readonly IPacienteService _service;
 
-    public PacientesController()
+    public PacientesController(IPacienteService service)
     {
-        _context = new AppDbContext();
+        _service = service;
     }
 
     // GET: api/pacientes
     [HttpGet]
     public async Task<IActionResult> GetPacientes()
     {
-        var pacientes = await _context.Pacientes.ToListAsync();
-
-        var pacientesDTO = pacientes
-            .Select(p => PacienteMapper.ToDTO(p))
-            .ToList();
-
-        return Ok(pacientesDTO);
+        var pacientes = await _service.GetAllAsync();
+        return Ok(pacientes);
     }
 
     // GET: api/pacientes/{id}
     [HttpGet("{id}")]
     public async Task<IActionResult> GetPacienteById(int id)
     {
-        var paciente = await _context.Pacientes.FindAsync(id);
-
-        if (paciente == null)
-            return NotFound();
-
-        return Ok(PacienteMapper.ToDTO(paciente));
+        var paciente = await _service.GetByIdAsync(id);
+        if (paciente == null) return NotFound();
+        return Ok(paciente);
     }
 
     // POST: api/pacientes
     [HttpPost]
     public async Task<IActionResult> CreatePacient([FromBody] PacienteCreateDTO dto)
     {
-        var cpfNormalizado = NormalizarCpf(dto.Cpf);
-
-        if (!IsEmailValido(dto.Email))
+        try
         {
-            return BadRequest(new { mensagem = "Email com formato inválido." });
+            var paciente = await _service.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetPacienteById), new { id = paciente.Id }, paciente);
         }
-
-        if (!IsTelefoneValido(dto.Telefone))
+        catch (ArgumentException ex)
         {
-            return BadRequest(new { mensagem = "Telefone com formato inválido." });
+            return BadRequest(new { mensagem = ex.Message });
         }
-
-        if (!IsCpfValido(cpfNormalizado))
-        {
-            return BadRequest(new { mensagem = "CPF inválido." });
-        }
-
-        if (dto.DataNasc > DateOnly.FromDateTime(DateTime.Today))
-        {
-            return BadRequest(new { mensagem = "Data de nascimento não pode ser futura." });
-        }
-
-        var cpfsExistentes = await _context.Pacientes
-            .AsNoTracking()
-            .Select(p => p.Cpf)
-            .ToListAsync();
-
-        var cpfJaExiste = cpfsExistentes.Any(cpf => NormalizarCpf(cpf) == cpfNormalizado);
-
-        if (cpfJaExiste)
-        {
-            return BadRequest(new { mensagem = "Já existe um paciente com este CPF." });
-        }
-
-        var paciente = PacienteMapper.ToModel(dto);
-        paciente.Cpf = cpfNormalizado;
-
-        _context.Pacientes.Add(paciente);
-        await _context.SaveChangesAsync();
-
-        var pacienteDTO = PacienteMapper.ToDTO(paciente);
-
-        return CreatedAtAction(nameof(GetPacienteById), new { id = paciente.Id }, pacienteDTO);
     }
 
     // PATCH: api/pacientes/{id}
     [HttpPatch("{id}")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdatePaciente(int id, [FromBody] PacienteUpdateDTO dto)
     {
-        var paciente = await _context.Pacientes.FindAsync(id);
-
-        if (paciente == null)
-            return NotFound();
-
-        if (dto.Cpf is not null)
+        try
         {
-            return BadRequest(new { mensagem = "CPF não pode ser alterado no PATCH." });
+            var paciente = await _service.UpdateAsync(id, dto);
+            if (paciente == null) return NotFound();
+            return Ok(paciente);
         }
-
-        if (dto.Email is not null && !IsEmailValido(dto.Email))
+        catch (ArgumentException ex)
         {
-            return BadRequest(new { mensagem = "Email com formato inválido." });
+            return BadRequest(new { mensagem = ex.Message });
         }
-
-        if (dto.Telefone is not null && !IsTelefoneValido(dto.Telefone))
-        {
-            return BadRequest(new { mensagem = "Telefone com formato inválido." });
-        }
-
-        if (dto.DataNasc is not null && dto.DataNasc > DateOnly.FromDateTime(DateTime.Today))
-        {
-            return BadRequest(new { mensagem = "Data de nascimento não pode ser futura." });
-        }
-
-        if (dto.Nome is not null)
-        {
-            paciente.Nome = dto.Nome;
-        }
-
-        if (dto.Email is not null)
-        {
-            paciente.Email = dto.Email;
-        }
-
-        if (dto.Telefone is not null)
-        {
-            paciente.Telefone = dto.Telefone;
-        }
-
-        if (dto.DataNasc is not null)
-        {
-            paciente.DataNasc = dto.DataNasc.Value;
-        }
-
-        await _context.SaveChangesAsync();
-
-        return Ok(PacienteMapper.ToDTO(paciente));
     }
 
     // DELETE: api/pacientes/{id}
     [HttpDelete("{id}")]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeletePaciente(int id)
     {
-        var paciente = await _context.Pacientes.FindAsync(id);
-
-        if (paciente == null)
-            return NotFound();
-
-        if (await PacientePossuiConsultaFutura(id))
-        {
-            return BadRequest(new { mensagem = "Não é possível remover paciente com consultas futuras." });
-        }
-
-        _context.Pacientes.Remove(paciente);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
-    }
-
-    private static bool IsEmailValido(string email)
-    {
-        var emailValidator = new EmailAddressAttribute();
-        return emailValidator.IsValid(email);
-    }
-
-    private static bool IsTelefoneValido(string telefone)
-    {
-        return TelefoneRegex.IsMatch(telefone);
-    }
-
-    private static bool IsCpfValido(string cpf)
-    {
-        var cpfNumeros = NormalizarCpf(cpf);
-
-        if (cpfNumeros.Length != 11)
-            return false;
-
-        if (cpfNumeros.Distinct().Count() == 1)
-            return false;
-
-        var somaPrimeiroDigito = 0;
-        for (var i = 0; i < 9; i++)
-        {
-            somaPrimeiroDigito += (cpfNumeros[i] - '0') * (10 - i);
-        }
-
-        var restoPrimeiroDigito = somaPrimeiroDigito % 11;
-        var primeiroDigitoCalculado = restoPrimeiroDigito < 2 ? 0 : 11 - restoPrimeiroDigito;
-
-        if (cpfNumeros[9] - '0' != primeiroDigitoCalculado)
-            return false;
-
-        var somaSegundoDigito = 0;
-        for (var i = 0; i < 10; i++)
-        {
-            somaSegundoDigito += (cpfNumeros[i] - '0') * (11 - i);
-        }
-
-        var restoSegundoDigito = somaSegundoDigito % 11;
-        var segundoDigitoCalculado = restoSegundoDigito < 2 ? 0 : 11 - restoSegundoDigito;
-
-        return cpfNumeros[10] - '0' == segundoDigitoCalculado;
-    }
-
-    private static string NormalizarCpf(string cpf)
-    {
-        return new string(cpf.Where(char.IsDigit).ToArray());
-    }
-
-    private async Task<bool> PacientePossuiConsultaFutura(int pacienteId)
-    {
-        var connection = _context.Database.GetDbConnection();
-        var abriuConexao = connection.State != ConnectionState.Open;
-
-        if (abriuConexao)
-        {
-            await connection.OpenAsync();
-        }
-
         try
         {
-            if (!await TabelaConsultasExiste(connection))
-            {
-                return false;
-            }
-
-            using var command = connection.CreateCommand();
-            command.CommandText = "SELECT COUNT(1) FROM Consultas WHERE PacienteId = @pacienteId AND DataHoraConsulta >= @agora";
-
-            var parametroPacienteId = command.CreateParameter();
-            parametroPacienteId.ParameterName = "@pacienteId";
-            parametroPacienteId.Value = pacienteId;
-            command.Parameters.Add(parametroPacienteId);
-
-            var parametroAgora = command.CreateParameter();
-            parametroAgora.ParameterName = "@agora";
-            parametroAgora.Value = DateTime.Now;
-            command.Parameters.Add(parametroAgora);
-
-            var resultado = await command.ExecuteScalarAsync();
-            var quantidade = Convert.ToInt32(resultado);
-
-            return quantidade > 0;
+            var ok = await _service.DeleteAsync(id);
+            if (!ok) return NotFound();
+            return NoContent();
         }
-        catch (SqliteException ex) when (ex.SqliteErrorCode == 1 && ex.Message.Contains("no such table", StringComparison.OrdinalIgnoreCase))
+        catch (InvalidOperationException ex)
         {
-            return false;
+            return BadRequest(new { mensagem = ex.Message });
         }
-        finally
-        {
-            if (abriuConexao && connection.State == ConnectionState.Open)
-            {
-                await connection.CloseAsync();
-            }
-        }
-    }
-
-    private static async Task<bool> TabelaConsultasExiste(DbConnection connection)
-    {
-        using var command = connection.CreateCommand();
-        command.CommandText = "SELECT COUNT(1) FROM sqlite_master WHERE type = 'table' AND name = 'Consultas'";
-
-        var resultado = await command.ExecuteScalarAsync();
-        var quantidade = Convert.ToInt32(resultado);
-
-        return quantidade > 0;
     }
 }
