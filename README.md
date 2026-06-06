@@ -80,5 +80,3 @@ Links úteis
 - Código de bootstrap/DI: [Program.cs](Program.cs)
 - Controladores principais: [Controllers/PacientesController.cs](Controllers/PacientesController.cs), [Controllers/MedicosController.cs](Controllers/MedicosController.cs), [Controllers/ConsultasController.cs](Controllers/ConsultasController.cs)
 - Collection de testes: `ApiClinica-com-testes.postman_collection.json`
-
-Se quiser, eu deixo o README ainda mais curto (apenas comandos e credenciais) ou abro o branch `feature/n3`, faço o commit com as alterações e crio o PR. O que prefere?
