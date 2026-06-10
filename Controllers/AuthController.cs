@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ApiClinica.DTOs;
-using ApiClinica.Services;
+using ApiClinica.Interfaces;
 
 namespace ApiClinica.Controllers;
 

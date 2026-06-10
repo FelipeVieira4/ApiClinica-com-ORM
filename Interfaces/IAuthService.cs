@@ -1,6 +1,6 @@
 using ApiClinica.DTOs;
 
-namespace ApiClinica.Services;
+namespace ApiClinica.Interfaces;
 
 public interface IAuthService
 {
