@@ -37,6 +37,7 @@ public class ConsultasController: ControllerBase
     }
 
     [HttpPost]
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateConsulta([FromBody] ConsultaCreateDTO consultaCreateDTO)
     {
         try

@@ -45,8 +45,8 @@ public class MedicosController : ControllerBase
 
     // POST: api/medicos
     [HttpPost]
-    public async Task<IActionResult>
-    CreateMedico([FromBody] MedicoCreateDTO dto)
+    [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
+    public async Task<IActionResult> CreateMedico([FromBody] MedicoCreateDTO dto)
     {
         try
         {
