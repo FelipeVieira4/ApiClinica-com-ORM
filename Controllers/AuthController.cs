@@ -19,15 +19,15 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Register(RegisterDTO dto)
     {
         var ok = await _authService.RegisterAsync(dto);
-        if (!ok) return Conflict(new { message = "Username already exists" });
-        return Created("", new { message = "User created" });
+        if (!ok) return Conflict(new { message = "Usuário já existe" });
+        return Created("", new { message = "Usuário criado" });
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDTO dto)
     {
         var token = await _authService.AuthenticateAsync(dto);
-        if (token == null) return Unauthorized(new { message = "Invalid credentials" });
+        if (token == null) return Unauthorized(new { message = "Credenciais inválidas" });
         return Ok(new { token });
     }
 }
